@@ -26,6 +26,9 @@ version = {attr = "ezbot.__version__"}
 [project.urls]
 GitHub = "https://github.com/tibue99/ezbot"
 
+[project.scripts]
+ezbot = "ezbot:run"
+
 [build-system]
 requires = ["setuptools>=43.0.0", "wheel"]
 build-backend = "setuptools.build_meta"

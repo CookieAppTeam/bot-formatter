@@ -1,0 +1,3 @@
+import ezbot
+
+ezbot.run()
