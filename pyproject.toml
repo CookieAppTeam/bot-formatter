@@ -1,0 +1,31 @@
+[project]
+name = "ezbot"
+description = "A formatter for the Discord.py library"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+keywords = ["discord", "discord.py", "py-cord"]
+authors = [
+    { name = "tibue99" }
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Quality Assurance",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "ezbot.__version__"}
+
+[project.urls]
+GitHub = "https://github.com/tibue99/ezbot"
+
+[build-system]
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
