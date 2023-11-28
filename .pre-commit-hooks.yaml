@@ -1,0 +1,5 @@
+- id: ezbot
+  name: ezbot
+  language: python
+  entry: ezbot
+  types: [python]
