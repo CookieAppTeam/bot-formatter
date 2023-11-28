@@ -7,6 +7,47 @@ from libcst import codemod
 from ezbot.formatters import ENABLED_FORMATTERS
 
 
+class Output:
+    modified_files: list[str] = []
+    failed_files: list[str] = []
+
+    def __init__(self, config: argparse.Namespace):
+        self.config = config
+
+    def success(self, file: str):
+        self.modified_files.append(file)
+
+    def error(self, file: str, error: Exception):
+        self.failed_files.append(f"{file}: {error}")
+
+    @staticmethod
+    def _check_plural(word: str, count: int) -> str:
+        return f"{count} {word}{'s' if count != 1 else ''}"
+
+    def print_output(self):
+        """Prints a report to the console if the silent mode isn't enabled."""
+
+        if self.config.silent:
+            return
+
+        modify = self._check_plural("file", len(self.modified_files))
+        check = self._check_plural("file", len(self.config.files))
+
+        if self.config.dry_run:
+            report = f"Done! Would modify {modify} (checked {check})"
+        else:
+            report = f"Done! Modified {modify} (checked {check})"
+
+        if self.modified_files:
+            report += "\n\n" + "\n".join(self.modified_files)
+
+        if self.failed_files:
+            report += f"\n\n{self._check_plural('error', len(self.failed_files))} occurred"
+            report += "\n" + "\n".join(self.failed_files)
+
+        print(report)
+
+
 class EzBot:
     def __init__(self, args: list[str]) -> None:
         parser = argparse.ArgumentParser(prog="ezbot")
@@ -17,15 +58,16 @@ class EzBot:
         )
 
         self.config = parser.parse_args(args)
+        self.report = Output(self.config)
 
         if not self.config.files:
             parser.print_help()
             return
 
-        self.modified_files = 0
-
         for file in self.config.files:
             self.format_file(file)
+
+        self.report.print_output()
 
     def log(self, message: str):
         """Prints a message to the console if the silent mode isn't enabled."""
@@ -38,7 +80,7 @@ class EzBot:
             with open(filename, encoding="utf-8") as f:
                 code = f.read()
         except Exception as e:
-            self.log(f"Could not read file {filename}: {e}\n")
+            self.report.error(filename, e)
             return
 
         for formatter in ENABLED_FORMATTERS:
@@ -47,15 +89,11 @@ class EzBot:
 
             if isinstance(result, codemod.TransformSuccess):
                 if result.code != code:
-                    if self.config.dry_run:
-                        self.log(f"Would format {filename}\n")
-                    else:
+                    self.report.success(filename)
+
+                    if not self.config.dry_run:
                         with open(filename, "w", encoding="utf-8") as f:
                             f.write(result.code)
-                            self.log(f"Formatted {filename}\n")
-                            self.modified_files += 1
 
             elif isinstance(result, codemod.TransformFailure):
-                self.log(f"Failed to format {filename}: {result.error}\n")
-
-        self.log(f"\nModified {self.modified_files} files (checked {len(self.config.files)} files)")
+                self.report.error(filename, result.error)
