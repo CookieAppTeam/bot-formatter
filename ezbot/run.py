@@ -8,21 +8,38 @@ from ezbot.formatters import ENABLED_FORMATTERS
 
 
 class EzBot:
-    def __init__(self, args) -> None:
-        parser = argparse.ArgumentParser()
-        parser.add_argument("filenames", nargs="*")
+    def __init__(self, args: list[str]) -> None:
+        parser = argparse.ArgumentParser(prog="ezbot")
+        parser.add_argument("files", nargs="*", help="The files to format.")
+        parser.add_argument("--silent", action="store_true", help="Hide all log messages.")
+        parser.add_argument(
+            "--dry-run", action="store_true", help="Scan files without modifying them."
+        )
 
         self.config = parser.parse_args(args)
 
-        for file in self.config.filenames:
+        if not self.config.files:
+            parser.print_help()
+            return
+
+        self.modified_files = 0
+
+        for file in self.config.files:
             self.format_file(file)
 
+    def log(self, message: str):
+        """Prints a message to the console if the silent mode isn't enabled."""
+        if not self.config.silent:
+            print(message)
+
     def format_file(self, filename: str):
+        """Runs all enabled formatters on a given file."""
         try:
             with open(filename, encoding="utf-8") as f:
                 code = f.read()
         except Exception as e:
-            print(f"Could not read file {filename}: {e}")
+            self.log(f"Could not read file {filename}: {e}\n")
+            return
 
         for formatter in ENABLED_FORMATTERS:
             transformer = formatter(codemod.CodemodContext(filename=filename))
@@ -30,9 +47,15 @@ class EzBot:
 
             if isinstance(result, codemod.TransformSuccess):
                 if result.code != code:
-                    with open(filename, "w", encoding="utf-8") as f:
-                        f.write(result.code)
-                        print(f"Formatted {filename}")
+                    if self.config.dry_run:
+                        self.log(f"Would format {filename}\n")
+                    else:
+                        with open(filename, "w", encoding="utf-8") as f:
+                            f.write(result.code)
+                            self.log(f"Formatted {filename}\n")
+                            self.modified_files += 1
 
             elif isinstance(result, codemod.TransformFailure):
-                print(f"Failed to format {filename}: {result.error}")
+                self.log(f"Failed to format {filename}: {result.error}\n")
+
+        self.log(f"\nModified {self.modified_files} files (checked {len(self.config.files)} files)")
