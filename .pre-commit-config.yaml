@@ -7,16 +7,8 @@ repos:
       - id: check-docstring-first
       - id: check-yaml
 
-  - repo: https://github.com/PyCQA/autoflake
-    rev: v2.2.1
-    hooks:
-    -   id: autoflake
-        args:
-        - --remove-all-unused-imports
-        - --remove-unused-variables
-
   - repo: https://github.com/psf/black
-    rev: 23.10.1
+    rev: 23.11.0
     hooks:
       - id: black
         args: [--safe, --line-length=100]
@@ -28,7 +20,7 @@ repos:
         args: ["--profile", "black"]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.6.1
+    rev: v1.7.1
     hooks:
       - id: mypy
         args: [--disable-error-code=name-defined, --disable-error-code=import]

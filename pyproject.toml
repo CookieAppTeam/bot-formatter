@@ -18,10 +18,11 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
 ]
-dynamic = ["version"]
+dynamic = ["version", "dependencies"]
 
 [tool.setuptools.dynamic]
 version = {attr = "ezbot.__version__"}
+dependencies = {file = "requirements.txt"}
 
 [project.urls]
 GitHub = "https://github.com/tibue99/ezbot"
