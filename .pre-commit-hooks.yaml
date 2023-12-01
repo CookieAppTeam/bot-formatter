@@ -1,5 +1,5 @@
-- id: ezbot
-  name: ezbot
+- id: bot-formatter
+  name: bot-formatter
   language: python
-  entry: ezbot
+  entry: bot-formatter
   types: [python]

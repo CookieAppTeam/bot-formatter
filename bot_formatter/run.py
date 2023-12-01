@@ -4,7 +4,7 @@ import argparse
 
 from libcst import codemod
 
-from ezbot.formatters import ENABLED_FORMATTERS
+from bot_formatter.formatters import ENABLED_FORMATTERS
 
 
 class Output:
@@ -48,9 +48,9 @@ class Output:
         print(report)
 
 
-class EzBot:
+class BotFormatter:
     def __init__(self, args: list[str]) -> None:
-        parser = argparse.ArgumentParser(prog="ezbot")
+        parser = argparse.ArgumentParser(prog="bot-formatter")
         parser.add_argument("files", nargs="*", help="The files to format.")
         parser.add_argument("--silent", action="store_true", help="Hide all log messages.")
         parser.add_argument(

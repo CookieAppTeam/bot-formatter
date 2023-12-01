@@ -1,5 +1,5 @@
 [project]
-name = "ezbot"
+name = "bot-formatter"
 description = "A formatter for the Discord.py library"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -21,14 +21,14 @@ classifiers = [
 dynamic = ["version", "dependencies"]
 
 [tool.setuptools.dynamic]
-version = {attr = "ezbot.__version__"}
+version = {attr = "bot_formatter.__version__"}
 dependencies = {file = "requirements.txt"}
 
 [project.urls]
-GitHub = "https://github.com/tibue99/ezbot"
+GitHub = "https://github.com/tibue99/bot-formatter"
 
 [project.scripts]
-ezbot = "ezbot:run"
+bot-formatter = "bot_formatter:run"
 
 [build-system]
 requires = ["setuptools>=43.0.0", "wheel"]

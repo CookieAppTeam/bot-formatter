@@ -12,9 +12,9 @@ from datetime import date
 
 sys.path.insert(0, os.path.abspath("../"))
 
-from ezbot import __version__
+from bot_formatter import __version__
 
-project = "EzBot"
+project = "bot-formatter"
 copyright = f"{date.today().year}, tibue99"
 author = "tibue99"
 release = __version__
@@ -56,6 +56,6 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 html_theme = "furo"
 html_static_path = ["_static"]
 
-html_title = f"<h3 align='center'>{release}</h3>"
-html_logo = "_static/ezbot.png"
+html_title = f"<h5 align='center'>{release}</h5>"
+html_logo = "_static/logo.png"
 html_favicon = "_static/favicon.ico"

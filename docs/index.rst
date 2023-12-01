@@ -1,5 +1,5 @@
-Welcome to EzBot's documentation!
-=================================
+Welcome to bot-formatter's documentation!
+=========================================
 
 .. toctree::
    :maxdepth: 2
