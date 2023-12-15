@@ -3,7 +3,7 @@
 [![](https://img.shields.io/readthedocs/bot-formatter?style=for-the-badge&color=blue&link=https%3A%2F%2Fbot-formatter.readthedocs.io%2F)](https://bot-formatter.readthedocs.io/)
 [![](https://img.shields.io/pypi/l/ezcord?style=for-the-badge)](https://github.com/tibue99/ezbot/blob/main/LICENSE)
 
-A formatter for the [Discord.py](https://github.com/Pycord-Development/pycord) library.
+A formatter for Discord bots.
 
 ## Installing
 Python 3.9 or higher is required.

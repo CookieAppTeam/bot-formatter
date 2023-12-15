@@ -43,7 +43,6 @@ autodoc_member_order = "bysource"
 
 intersphinx_mapping = {
     "py": ("https://docs.python.org/3", None),
-    "dc": ("https://discordpy.readthedocs.io/en/stable/", None),
 }
 
 templates_path = ["_templates"]

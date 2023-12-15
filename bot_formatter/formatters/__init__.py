@@ -1,3 +1,4 @@
-from .pycord import ConvertSetup
+from .dpy import ConvertSetup
+from .pycord import ConvertContext
 
-ENABLED_FORMATTERS = [ConvertSetup]
+ENABLED_FORMATTERS = [ConvertSetup, ConvertContext]
