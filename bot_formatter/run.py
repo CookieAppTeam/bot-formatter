@@ -4,7 +4,7 @@ import argparse
 
 from libcst import codemod
 
-from bot_formatter.formatters import ENABLED_FORMATTERS
+from bot_formatter.formatters import PYCORD, EZCORD, DPY
 
 
 class Output:
@@ -56,6 +56,10 @@ class BotFormatter:
         parser.add_argument(
             "--dry-run", action="store_true", help="Scan files without modifying them."
         )
+        parser.add_argument(
+            "--lib", default="pycord", choices=["dpy", "pycord"], help="The library to use."
+        )
+        parser.add_argument("--ezcord", action="store_true", help="Use Ezcord formatters.")
 
         self.config = parser.parse_args(args)
         self.report = Output(self.config)
@@ -83,7 +87,15 @@ class BotFormatter:
             self.report.error(filename, e)
             return
 
-        for formatter in ENABLED_FORMATTERS:
+        formatters = []
+        if self.config.lib == "pycord":
+            formatters.extend(PYCORD)
+        elif self.config.lib == "dpy":
+            formatters.extend(DPY)
+        if self.config.ezcord:
+            formatters.extend(EZCORD)
+
+        for formatter in formatters:
             transformer = formatter(codemod.CodemodContext(filename=filename))
             result = codemod.transform_module(transformer, code)
 
