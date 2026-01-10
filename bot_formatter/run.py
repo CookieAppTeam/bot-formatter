@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
+from typing import get_type_hints
 
 from libcst import codemod
+import yaml
 
-from bot_formatter.formatters import DPY, EZCORD, PYCORD
+from bot_formatter.formatters import DPY, EZCORD, PYCORD, LANG, YML
 
 
 class Output:
     modified_files: list[str] = []
     failed_files: list[str] = []
+    failed_checks: dict[str, list[str]] = {}
 
     def __init__(self, config: argparse.Namespace):
         self.config = config
@@ -19,6 +23,11 @@ class Output:
 
     def error(self, file: str, error: Exception):
         self.failed_files.append(f"{file}: {error}")
+
+    def check_failed(self, file: str, error_txt: str):
+        if file not in self.failed_checks:
+            self.failed_checks[file] = []
+        self.failed_checks[file].append(error_txt)
 
     @staticmethod
     def _check_plural(word: str, count: int) -> str:
@@ -45,6 +54,10 @@ class Output:
             report += f"\n\n{self._check_plural('error', len(self.failed_files))} occurred"
             report += "\n" + "\n".join(self.failed_files)
 
+        for file, errors in self.failed_checks.items():
+            report += f"\n\n\n------ CHECKS FAILED IN {file.upper()} ------"
+            report += "\n\n" + "\n\n".join(errors)
+
         print(report)
 
 
@@ -60,6 +73,8 @@ class BotFormatter:
             "--lib", default="pycord", choices=["dpy", "pycord"], help="The library to use."
         )
         parser.add_argument("--ezcord", action="store_true", help="Use Ezcord formatters.")
+        parser.add_argument("--no-yaml", action="store_true", help="Disable YAML formatters.")
+        parser.add_argument("--lang", help="The language directory to check.")
 
         self.config = parser.parse_args(args)
         self.report = Output(self.config)
@@ -68,15 +83,61 @@ class BotFormatter:
             parser.print_help()
             return
 
+        # Format each file
         for file in self.config.files:
             self.format_file(file)
 
+        # Check language files
+        if self.config.lang:
+            self.lang_dir = Path(self.config.lang)
+            if not self.lang_dir.is_dir():
+                raise ValueError(f"The language directory '{self.lang_dir}' is not a valid directory.")
+            self.check_lang_files()
+
+        # Print report and exit with error code if needed
         self.report.print_output()
+        if len(self.report.failed_checks) > 0:
+            raise SystemExit(1)
 
     def log(self, message: str):
         """Prints a message to the console if the silent mode isn't enabled."""
+
         if not self.config.silent:
             print(message)
+
+    def check_lang_files(self):
+        """Ensure consistency across all language files."""
+
+        lang_files = list(self.lang_dir.glob("*.yaml")) + list(self.lang_dir.glob("*.yml"))
+
+        # All keys as a dictionary
+        lang_keys = {}
+        for file_path in lang_files:
+            with open(file_path, encoding="utf-8") as f:
+                content = yaml.safe_load(f)
+                lang_keys[file_path.name] = content
+
+        # All contents as a string
+        lang_contents = {}
+        for file_path in lang_files:
+            with open(file_path, encoding="utf-8") as f:
+                code = f.read()
+                lang_contents[file_path.name] = code
+
+        for formatter in LANG:
+            params = get_type_hints(formatter)
+
+            if "lang_keys" in params and "lang_content" in params:
+                formatter(lang_keys, lang_contents, self.report)
+            elif "lang_content" in params:
+                formatter(lang_contents, self.report)
+            elif "lang_keys" in params:
+                formatter(lang_keys, self.report)
+            else:
+                raise ValueError(
+                    "Formatter must accept either 'lang_keys' or 'lang_contents' parameter."
+                )
+
 
     def format_file(self, filename: str):
         """Runs all enabled formatters on a given file."""
@@ -95,7 +156,13 @@ class BotFormatter:
         if self.config.ezcord:
             formatters.extend(EZCORD)
 
+        ext = filename.split(".")[-1]
+
+        # Run Python formatters
         for formatter in formatters:
+            if ext != "py":
+                continue
+
             transformer = formatter(codemod.CodemodContext(filename=filename))
             result = codemod.transform_module(transformer, code)
 
@@ -109,3 +176,16 @@ class BotFormatter:
 
             elif isinstance(result, codemod.TransformFailure):
                 self.report.error(filename, result.error)
+
+        # Run YAML formatters
+        if self.config.no_yaml or ext not in ["yaml", "yml"]:
+            return
+
+        for lang_formatter in YML:
+            new_code = lang_formatter(code)
+
+            if new_code != code:
+                self.report.success(filename)
+                if not self.config.dry_run:
+                    with open(filename, "w", encoding="utf-8") as f:
+                        f.write(new_code)

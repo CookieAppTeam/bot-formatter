@@ -2,4 +2,4 @@
   name: bot-formatter
   language: python
   entry: bot-formatter
-  types: [python]
+  types: [python, yaml, yml]
