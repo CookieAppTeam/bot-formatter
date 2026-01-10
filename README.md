@@ -1,12 +1,12 @@
 # bot-formatter
-[![](https://img.shields.io/pypi/v/ezcord.svg?style=for-the-badge&logo=pypi&color=yellow&logoColor=white)](https://pypi.org/project/ezbot/)
+[![](https://img.shields.io/pypi/v/ezcord.svg?style=for-the-badge&logo=pypi&color=yellow&logoColor=white)](https://pypi.org/project/bot-formatter/)
 [![](https://img.shields.io/readthedocs/bot-formatter?style=for-the-badge&color=blue&link=https%3A%2F%2Fbot-formatter.readthedocs.io%2F)](https://bot-formatter.readthedocs.io/)
 [![](https://img.shields.io/pypi/l/ezcord?style=for-the-badge)](https://github.com/tibue99/ezbot/blob/main/LICENSE)
 
 A formatter for Discord bots.
 
 ## Installing
-Python 3.9 or higher is required.
+Python 3.10 or higher is required.
 ```
 pip install bot-formatter
 ```

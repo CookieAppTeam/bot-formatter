@@ -4,7 +4,7 @@ import argparse
 
 from libcst import codemod
 
-from bot_formatter.formatters import PYCORD, EZCORD, DPY
+from bot_formatter.formatters import DPY, EZCORD, PYCORD
 
 
 class Output:

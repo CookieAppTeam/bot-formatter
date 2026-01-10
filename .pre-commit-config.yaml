@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -8,31 +8,31 @@ repos:
       - id: check-yaml
 
   - repo: https://github.com/psf/black
-    rev: 23.11.0
+    rev: 25.12.0
     hooks:
       - id: black
         args: [--safe, --line-length=100]
 
   - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
+    rev: 7.0.0
     hooks:
       - id: isort
         args: ["--profile", "black"]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.7.1
+    rev: v1.19.1
     hooks:
       - id: mypy
         args: [--disable-error-code=name-defined, --disable-error-code=import]
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.0
+    rev: v3.21.2
     hooks:
       - id: pyupgrade
-        args: [--py39-plus]
+        args: [--py310-plus]
 
   - repo: https://github.com/DanielNoord/pydocstringformatter
-    rev: v0.7.3
+    rev: v0.7.5
     hooks:
       - id: pydocstringformatter
         args:

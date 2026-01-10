@@ -9,35 +9,17 @@ class ConvertContext(VisitorBasedCodemodCommand):
     DESCRIPTION = "Converts discord.ApplicationContext to ezcord.EzContext."
 
     SLASH_DECORATOR = m.FunctionDef(
-        decorators=[
-            m.Decorator(
-                decorator=m.Call(
-                    func=m.Name("slash_command")
-                )
-            )
-        ]
+        decorators=[m.Decorator(decorator=m.Call(func=m.Name("slash_command")))]
     )
 
-    IMPORT_EZCORD = m.Import(
-        names=[
-            m.ImportAlias(
-                name=m.Name(value="ezcord")
-            )
-        ]
-    )
+    IMPORT_EZCORD = m.Import(names=[m.ImportAlias(name=m.Name(value="ezcord"))])
 
-    EZ_ANNOTATION_1 = m.Annotation(
-        m.Attribute(
-            value=m.Name("ezcord"),
-            attr=m.Name("EzContext")
-        )
-    )
+    EZ_ANNOTATION_1 = m.Annotation(m.Attribute(value=m.Name("ezcord"), attr=m.Name("EzContext")))
 
     EZ_ANNOTATION_2 = m.Annotation(
         m.Name(
-            value='EzContext',
+            value="EzContext",
         )
-
     )
 
     def __init__(self, context: cst.codemod.CodemodContext):
@@ -45,9 +27,7 @@ class ConvertContext(VisitorBasedCodemodCommand):
         self.has_changes = False
         self.has_ezcord_import = False
 
-    def leave_Import(
-        self, original_node: cst.Import, updated_node: cst.Import
-    ) -> cst.Import:
+    def leave_Import(self, original_node: cst.Import, updated_node: cst.Import) -> cst.Import:
         """Checks if Ezcord is already imported."""
 
         if m.matches(updated_node, self.IMPORT_EZCORD):
@@ -64,7 +44,9 @@ class ConvertContext(VisitorBasedCodemodCommand):
         new_params = []
         for param in node.params.params:
             if param.annotation:
-                if m.matches(param.annotation, self.EZ_ANNOTATION_1) or m.matches(param.annotation, self.EZ_ANNOTATION_2):
+                if m.matches(param.annotation, self.EZ_ANNOTATION_1) or m.matches(
+                    param.annotation, self.EZ_ANNOTATION_2
+                ):
                     new_params.append(param)
                     continue
 
@@ -74,12 +56,7 @@ class ConvertContext(VisitorBasedCodemodCommand):
 
             modified_param = cst.Param(
                 cst.Name("ctx"),
-                cst.Annotation(
-                    cst.Attribute(
-                        value=cst.Name("ezcord"),
-                        attr=cst.Name("EzContext")
-                    )
-                )
+                cst.Annotation(cst.Attribute(value=cst.Name("ezcord"), attr=cst.Name("EzContext"))),
             )
             new_params.append(modified_param)
             self.has_changes = True
@@ -92,8 +69,8 @@ class ConvertContext(VisitorBasedCodemodCommand):
         if self.has_changes and not self.has_ezcord_import:
             new_import = cst.Import(names=[cst.ImportAlias(name=cst.Name("ezcord"))])
             new_body = [
-               cst.SimpleStatementLine(body=[new_import]),
-               cst.Newline(),
+                cst.SimpleStatementLine(body=[new_import]),
+                cst.Newline(),
             ] + list(updated_node.body)
             return updated_node.with_changes(body=new_body)
 

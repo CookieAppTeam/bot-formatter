@@ -2,7 +2,7 @@
 name = "bot-formatter"
 description = "A formatter for Discord bots."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 keywords = ["discord", "discord.py", "py-cord"]
 authors = [
@@ -14,9 +14,11 @@ classifiers = [
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
     "Topic :: Software Development :: Quality Assurance",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dynamic = ["version", "dependencies"]
 
@@ -31,5 +33,5 @@ GitHub = "https://github.com/tibue99/bot-formatter"
 bot-formatter = "bot_formatter:run"
 
 [build-system]
-requires = ["setuptools>=43.0.0", "wheel"]
+requires = ["setuptools>=62.6", "wheel"]
 build-backend = "setuptools.build_meta"
