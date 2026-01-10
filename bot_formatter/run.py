@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+from typing import get_type_hints
 
 from libcst import codemod
 import yaml
 
-from bot_formatter.formatters import DPY, EZCORD, PYCORD, LANG_KEYS, LANG_CONTENT, YML
+from bot_formatter.formatters import DPY, EZCORD, PYCORD, LANG, YML
 
 
 class Output:
@@ -115,23 +116,33 @@ class BotFormatter:
 
         lang_files = list(self.lang_dir.glob("*.yaml")) + list(self.lang_dir.glob("*.yml"))
 
+        # All keys as a dictionary
         lang_keys = {}
         for file_path in lang_files:
             with open(file_path, encoding="utf-8") as f:
                 content = yaml.safe_load(f)
                 lang_keys[file_path.name] = content
 
-        for formatter in LANG_KEYS:
-            formatter(lang_keys, self.report)
-
+        # All contents as a string
         lang_contents = {}
         for file_path in lang_files:
             with open(file_path, encoding="utf-8") as f:
                 code = f.read()
                 lang_contents[file_path.name] = code
 
-        for formatter in LANG_CONTENT:
-            formatter(lang_contents, self.report)
+        for formatter in LANG:
+            params = get_type_hints(formatter)
+
+            if "lang_keys" in params and "lang_content" in params:
+                formatter(lang_keys, lang_contents, self.report)
+            elif "lang_content" in params:
+                formatter(lang_contents, self.report)
+            elif "lang_keys" in params:
+                formatter(lang_keys, self.report)
+            else:
+                raise ValueError(
+                    "Formatter must accept either 'lang_keys' or 'lang_contents' parameter."
+                )
 
 
     def format_file(self, filename: str):
