@@ -2,4 +2,5 @@
   name: bot-formatter
   language: python
   entry: bot-formatter
-  types: [python, yaml, yml]
+  types_or: [python, yaml]
+  require_serial: true
