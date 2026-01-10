@@ -64,17 +64,30 @@ class Output:
 class BotFormatter:
     def __init__(self, args: list[str]) -> None:
         parser = argparse.ArgumentParser(prog="bot-formatter")
-        parser.add_argument("files", nargs="*", help="The files to format.")
+        parser.add_argument(
+            "files",
+            nargs="*",
+            help="The files to format. When using pre-commit, this is provided automatically.",
+        )
         parser.add_argument("--silent", action="store_true", help="Hide all log messages.")
         parser.add_argument(
             "--dry-run", action="store_true", help="Scan files without modifying them."
         )
         parser.add_argument(
-            "--lib", default="pycord", choices=["dpy", "pycord"], help="The library to use."
+            "--lib", default="pycord", choices=["dpy", "pycord"], help="The Discord library to use."
         )
         parser.add_argument("--ezcord", action="store_true", help="Use Ezcord formatters.")
-        parser.add_argument("--no-yaml", action="store_true", help="Disable YAML formatters.")
-        parser.add_argument("--lang", help="The language directory to check.")
+        parser.add_argument(
+            "--yaml",
+            action=argparse.BooleanOptionalAction,
+            default=True,
+            help="Enable YAML formatters.",
+        )
+        parser.add_argument(
+            "--lang-dir",
+            type=Path,
+            help="The language directory to check. YAML files in this directory will be compared.",
+        )
 
         self.config = parser.parse_args(args)
         self.report = Output(self.config)
@@ -88,12 +101,9 @@ class BotFormatter:
             self.format_file(file)
 
         # Check language files
-        if self.config.lang:
-            self.lang_dir = Path(self.config.lang)
-            if not self.lang_dir.is_dir():
-                raise ValueError(
-                    f"The language directory '{self.lang_dir}' is not a valid directory."
-                )
+        if self.config.lang_dir:
+            if not self.config.lang_dir.is_dir():
+                parser.error(f"'{self.config.lang_dir}' is not a valid directory.")
             self.check_lang_files()
 
         # Print report and exit with error code if needed
@@ -110,7 +120,9 @@ class BotFormatter:
     def check_lang_files(self):
         """Ensure consistency across all language files."""
 
-        lang_files = list(self.lang_dir.glob("*.yaml")) + list(self.lang_dir.glob("*.yml"))
+        lang_files = list(self.config.lang_dir.glob("*.yaml")) + list(
+            self.config.lang_dir.glob("*.yml")
+        )
 
         # All keys as a dictionary
         lang_keys = {}
@@ -179,7 +191,7 @@ class BotFormatter:
                 self.report.error(filename, result.error)
 
         # Run YAML formatters
-        if self.config.no_yaml or ext not in ["yaml", "yml"]:
+        if not self.config.yaml or ext not in ["yaml", "yml"]:
             return
 
         for lang_formatter in YML:
