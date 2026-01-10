@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 
 from libcst import codemod
 
@@ -60,6 +61,7 @@ class BotFormatter:
             "--lib", default="pycord", choices=["dpy", "pycord"], help="The library to use."
         )
         parser.add_argument("--ezcord", action="store_true", help="Use Ezcord formatters.")
+        parser.add_argument("--lang", help="The language directory to format.")
 
         self.config = parser.parse_args(args)
         self.report = Output(self.config)
@@ -67,6 +69,13 @@ class BotFormatter:
         if not self.config.files:
             parser.print_help()
             return
+
+        if self.config.lang:
+            self.lang_dir = Path(self.config.lang)
+            if not self.lang_dir.is_dir():
+                raise ValueError(f"The language directory '{self.lang_dir}' is not a valid directory.")
+        else:
+            self.lang_dir = None
 
         for file in self.config.files:
             self.format_file(file)
@@ -117,6 +126,9 @@ class BotFormatter:
 
         # Run language formatters
         if ext not in ["yaml", "yml"]:
+            return
+
+        if self.lang_dir and self.lang_dir not in Path(filename).parents:
             return
 
         for lang_formatter in LANG:
