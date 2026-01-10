@@ -1,0 +1,44 @@
+site_name: Bot Formatter
+site_url: https://bot-formatter.readthedocs.io/
+theme:
+  name: material
+  language: en
+  logo: assets/favicon.png
+  favicon: assets/favicon.png
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Roboto
+  features:
+    - navigation.footer
+    - content.code.copy
+  palette:
+    # Dark mode
+    - scheme: slate
+      primary: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+    # Light mode
+    - scheme: default
+      primary: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+repo_url: https://github.com/CookieAppTeam/bot-formatter
+repo_name: bot-formatter
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/CookieAppTeam/bot-formatter
+      name: GitHub Repository
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/zfvbjTEzv6
+      name: Discord Server
+plugins:
+  - search
