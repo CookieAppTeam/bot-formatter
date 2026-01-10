@@ -69,24 +69,30 @@ class BotFormatter:
             nargs="*",
             help="The files to format. When using pre-commit, this is provided automatically.",
         )
-        parser.add_argument("--silent", action="store_true", help="Hide all log messages.")
-        parser.add_argument(
-            "--dry-run", action="store_true", help="Scan files without modifying them."
-        )
-        parser.add_argument(
-            "--lib", default="pycord", choices=["dpy", "pycord"], help="The Discord library to use."
-        )
-        parser.add_argument("--ezcord", action="store_true", help="Use Ezcord formatters.")
-        parser.add_argument(
-            "--yaml",
-            action=argparse.BooleanOptionalAction,
-            default=True,
-            help="Enable YAML formatters.",
-        )
         parser.add_argument(
             "--lang-dir",
             type=Path,
             help="The language directory to check. YAML files in this directory will be compared.",
+        )
+
+        parser.add_argument("--silent", action="store_true", help="Hide all log messages.")
+        parser.add_argument(
+            "--dry-run", action="store_true", help="Scan files without modifying them."
+        )
+
+        formatters = parser.add_argument_group("formatters")
+        formatters.add_argument(
+            "--lib",
+            default="none",
+            choices=["dpy", "pycord", "none"],
+            help="Enable formatters for a Discord library. Defaults to 'none'.",
+        )
+        formatters.add_argument("--ezcord", action="store_true", help="Enable Ezcord formatters.")
+        formatters.add_argument(
+            "--yaml",
+            action=argparse.BooleanOptionalAction,
+            default=True,
+            help="Enable YAML formatters.",
         )
 
         self.config = parser.parse_args(args)

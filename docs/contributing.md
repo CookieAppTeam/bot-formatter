@@ -1,5 +1,6 @@
 ## Local Development
-To set up a development environment, clone the repository and install the dependencies:
+To set up a development environment, clone the [repository](https://github.com/CookieAppTeam/bot-formatter)
+and install the dependencies:
 ```
 pip install dev-requirements.txt
 ```
@@ -8,7 +9,7 @@ You can then run the formatter for a file of your choice:
 bot_formatter your_file.py
 ```
 
-## Pre-Commit Hook Testing
+## Test Pre-Commit Hook
 To test the pre-commit hook locally, first get your last commit hash:
 ```
 git rev-parse HEAD

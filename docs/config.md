@@ -1,15 +1,27 @@
 # Configuration
-There are several configuration options available.
-You can either pass them as command-line arguments or pass them into your `.pre-commit-config.yaml` file.
+There are several configuration options available. You can either pass them as
+command-line arguments or write them into your `.pre-commit-config.yaml` file.
 
-| Argument             | Description                                                                          |
-|----------------------|--------------------------------------------------------------------------------------|
-| `--silent`           | Disable all outputs.                                                                 |
-| `--dry-run`          | Checks files without changing them.                                                  |
-| `--lib {dpy,pycord}` | Whether to use `Discord.py` or `Pycord`. Default to `Pycord`.                        |
-| `--ezcord`           | Enables `Ezcord` checks.                                                             |
-| `--no-yaml`          | Disables YAML formatters.                                                            |
-| `--lang`             | Set the directory for your language files. Files in this directory will be compared. |
+!!! tip
+    These options can also be viewed with the `--help` argument.
 
+## Positional Arguments
+| Argument | Description                                                                           |
+|----------|---------------------------------------------------------------------------------------|
+| `files`  | One or more files to format. When using `pre-commit`, this is provided automatically. |
 
-These options can also be viewed with the `--help` argument.
+## Options
+| Argument     | Description                                                                       |
+|--------------|-----------------------------------------------------------------------------------|
+| `--lang-dir` | The language directory to check. YAML files in this directory will be compared.   |
+| `--silent`   | Disable all outputs.                                                              |
+| `--dry-run`  | Check files without modifying them.                                               |
+
+## Formatters
+| Argument                  | Description                                                         |
+|---------------------------|---------------------------------------------------------------------|
+| `--lib {dpy,pycord,none}` | Enable formatters for `Discord.py` or `Pycord`. Defaults to `none`. |
+| `--ezcord`                | Enable `Ezcord` formatters. Disabled by default.                    |
+| `--yaml` `--no-yaml`      | Enable or disable YAML formatters. Enabled by default.              |
+
+For usage examples, see the [Getting Started](index.md#usage) page.
