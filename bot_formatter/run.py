@@ -98,10 +98,6 @@ class BotFormatter:
         self.config = parser.parse_args(args)
         self.report = Output(self.config)
 
-        if not self.config.files:
-            parser.print_help()
-            return
-
         # Format each file
         for file in self.config.files:
             self.format_file(file)
