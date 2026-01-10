@@ -4,7 +4,7 @@ import argparse
 
 from libcst import codemod
 
-from bot_formatter.formatters import DPY, EZCORD, PYCORD
+from bot_formatter.formatters import DPY, EZCORD, PYCORD, LANG
 
 
 class Output:
@@ -95,7 +95,12 @@ class BotFormatter:
         if self.config.ezcord:
             formatters.extend(EZCORD)
 
+        ext = filename.split(".")[-1]
+
         for formatter in formatters:
+            if ext != "py":
+                continue
+
             transformer = formatter(codemod.CodemodContext(filename=filename))
             result = codemod.transform_module(transformer, code)
 
@@ -109,3 +114,16 @@ class BotFormatter:
 
             elif isinstance(result, codemod.TransformFailure):
                 self.report.error(filename, result.error)
+
+        # Run language formatters
+        if ext not in ["yaml", "yml"]:
+            return
+
+        for lang_formatter in LANG:
+            new_code = lang_formatter(code)
+
+            if new_code != code:
+                self.report.success(filename)
+                if not self.config.dry_run:
+                    with open(filename, "w", encoding="utf-8") as f:
+                        f.write(new_code)
