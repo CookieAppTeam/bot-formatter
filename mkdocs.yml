@@ -10,7 +10,6 @@ theme:
   font:
     text: Roboto
   features:
-    - navigation.indexes
     - navigation.footer
     - content.code.copy
   palette:
@@ -43,6 +42,3 @@ extra:
       name: Discord Server
 plugins:
   - search
-  - git-committers:
-      repository: CookieAppTeam/bot-formatter
-      branch: main
