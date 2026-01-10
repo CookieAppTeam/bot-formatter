@@ -1,7 +1,6 @@
-"""Formatter for YAML language files.
-
-These formatters do not check individual code files, but rather
-ensure consistency across all language files in the project.
+"""
+Formatters for YAML language file keys.
+They compare keys across multiple language files.
 """
 
 from typing import TYPE_CHECKING
@@ -9,12 +8,11 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from bot_formatter.run import Output
 
-
-# A dictionary with a mapping of file names to their content
+# A dictionary with a mapping of file names to their keys
 LANG_CONTENT = dict[str, dict]
 
 
-def _collect_keys(lang_content: dict, parent_key: str | None = None) -> set[str]:
+def _collect_keys(lang_content: LANG_CONTENT, parent_key: str | None = None) -> set[str]:
     """Recursively collects all keys in a nested dictionary."""
 
     lang_keys = set()
@@ -31,7 +29,6 @@ def check_missing_keys(lang_contents: LANG_CONTENT, report: "Output"):
     """Checks that all language files have the same keys."""
 
     for file_name, content in lang_contents.items():
-        errors = []
         for other_file_name, other_content in lang_contents.items():
             if file_name == other_file_name:
                 continue
@@ -43,7 +40,4 @@ def check_missing_keys(lang_contents: LANG_CONTENT, report: "Output"):
 
             if missing_keys:
                 missing = '\n'.join(sorted([f"- {key}" for key in missing_keys]))
-                errors.append(f"Missing keys compared to {other_file_name}:\n{missing}")
-
-        if errors:
-            report.check_failed(file_name, errors)
+                report.check_failed(file_name, f"Missing keys compared to {other_file_name}:\n{missing}")

@@ -6,7 +6,7 @@ from pathlib import Path
 from libcst import codemod
 import yaml
 
-from bot_formatter.formatters import DPY, EZCORD, PYCORD, LANG, YML
+from bot_formatter.formatters import DPY, EZCORD, PYCORD, LANG_KEYS, LANG_CONTENT, YML
 
 
 class Output:
@@ -24,7 +24,9 @@ class Output:
         self.failed_files.append(f"{file}: {error}")
 
     def check_failed(self, file: str, error_txt: str):
-        self.failed_checks[file] = error_txt
+        if file not in self.failed_checks:
+            self.failed_checks[file] = []
+        self.failed_checks[file].append(error_txt)
 
     @staticmethod
     def _check_plural(word: str, count: int) -> str:
@@ -52,8 +54,8 @@ class Output:
             report += "\n" + "\n".join(self.failed_files)
 
         for file, errors in self.failed_checks.items():
-            report += f"\n\n------ CHECKS FAILED IN {file.upper()} ------"
-            report += "\n\n" + "\n".join(errors)
+            report += f"\n\n\n------ CHECKS FAILED IN {file.upper()} ------"
+            report += "\n\n" + "\n\n".join(errors)
 
         print(report)
 
@@ -113,13 +115,22 @@ class BotFormatter:
 
         lang_files = list(self.lang_dir.glob("*.yaml")) + list(self.lang_dir.glob("*.yml"))
 
-        lang_contents = {}
+        lang_keys = {}
         for file_path in lang_files:
             with open(file_path, encoding="utf-8") as f:
                 content = yaml.safe_load(f)
-                lang_contents[file_path.name] = content
+                lang_keys[file_path.name] = content
 
-        for formatter in LANG:
+        for formatter in LANG_KEYS:
+            formatter(lang_keys, self.report)
+
+        lang_contents = {}
+        for file_path in lang_files:
+            with open(file_path, encoding="utf-8") as f:
+                code = f.read()
+                lang_contents[file_path.name] = code
+
+        for formatter in LANG_CONTENT:
             formatter(lang_contents, self.report)
 
 
