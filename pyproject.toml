@@ -9,7 +9,7 @@ authors = [
     { name = "tibue99" }
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: MIT License",
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
@@ -27,7 +27,7 @@ version = {attr = "bot_formatter.__version__"}
 dependencies = {file = "requirements.txt"}
 
 [project.urls]
-GitHub = "https://github.com/tibue99/bot-formatter"
+GitHub = "https://github.com/CookieAppTeam/bot-formatter"
 
 [project.scripts]
 bot-formatter = "bot_formatter:run"
