@@ -1,9 +1,11 @@
 from .dpy import ConvertSetup
-from .lang import remove_duplicate_new_lines
+from .yml import remove_duplicate_new_lines
 from .pycord import ConvertContext
+from .lang import check_missing_keys
 
 
+EZCORD = [ConvertContext]
+LANG = [check_missing_keys]
 PYCORD = []
 DPY = [ConvertSetup]
-EZCORD = [ConvertContext]
-LANG = [remove_duplicate_new_lines]
+YML = [remove_duplicate_new_lines]

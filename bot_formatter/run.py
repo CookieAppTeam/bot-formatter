@@ -6,7 +6,7 @@ from pathlib import Path
 from libcst import codemod
 import yaml
 
-from bot_formatter.formatters import DPY, EZCORD, PYCORD, LANG
+from bot_formatter.formatters import DPY, EZCORD, PYCORD, LANG, YML
 
 
 class Output:
@@ -104,7 +104,7 @@ class BotFormatter:
             print(message)
 
     def check_lang_files(self):
-        """Run language file checks to ensure consistency across all language files."""
+        """Ensure consistency across all language files."""
 
         if not self.lang_dir:
             return
@@ -117,36 +117,8 @@ class BotFormatter:
                 content = yaml.safe_load(f)
                 lang_contents[file_path.name] = content
 
-        def collect_keys(lang_content: dict, parent_key: str | None = None) -> set[str]:
-            """Recursively collects all keys in a nested dictionary."""
-
-            lang_keys = set()
-            for key, value in lang_content.items():
-                full_key = f"{parent_key}.{key}" if parent_key else key
-                lang_keys.add(full_key)
-                if isinstance(value, dict):
-                    lang_keys.update(collect_keys(value, full_key))
-
-            return lang_keys
-
-        # detect differences in lang_contents
-        for file_name, content in lang_contents.items():
-            errors = []
-            for other_file_name, other_content in lang_contents.items():
-                if file_name == other_file_name:
-                    continue
-
-                keys = collect_keys(content)
-                other_keys = collect_keys(other_content)
-
-                missing_keys = other_keys - keys
-
-                if missing_keys:
-                    missing = '\n'.join(sorted([f"- {key}" for key in missing_keys]))
-                    errors.append(f"Missing keys compared to {other_file_name}:\n{missing}")
-
-            if errors:
-                self.report.check_failed(file_name, errors)
+        for formatter in LANG:
+            formatter(lang_contents, self.report)
 
 
     def format_file(self, filename: str):
@@ -190,7 +162,7 @@ class BotFormatter:
         if self.config.no_yaml or ext not in ["yaml", "yml"]:
             return
 
-        for lang_formatter in LANG:
+        for lang_formatter in YML:
             new_code = lang_formatter(code)
 
             if new_code != code:
