@@ -83,22 +83,19 @@ class BotFormatter:
             parser.print_help()
             return
 
+        # Format each file
+        for file in self.config.files:
+            self.format_file(file)
+
         # Check language files
         if self.config.lang:
             self.lang_dir = Path(self.config.lang)
             if not self.lang_dir.is_dir():
                 raise ValueError(f"The language directory '{self.lang_dir}' is not a valid directory.")
-        else:
-            self.lang_dir = None
+            self.check_lang_files()
 
-        self.check_lang_files()
-
-        # Format each file
-        for file in self.config.files:
-            self.format_file(file)
-
+        # Print report and exit with error code if needed
         self.report.print_output()
-
         if len(self.report.failed_checks) > 0:
             raise SystemExit(1)
 
@@ -110,9 +107,6 @@ class BotFormatter:
 
     def check_lang_files(self):
         """Ensure consistency across all language files."""
-
-        if not self.lang_dir:
-            return
 
         lang_files = list(self.lang_dir.glob("*.yaml")) + list(self.lang_dir.glob("*.yml"))
 
