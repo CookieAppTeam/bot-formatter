@@ -1,6 +1,4 @@
-"""
-Formatters for YAML language files that compare content and keys across multiple files.
-"""
+"""Formatters for YAML language files that compare content and keys across multiple files."""
 
 # A dictionary with a mapping of file names to their keys
 LANG_KEYS = dict[str, dict]
@@ -36,8 +34,10 @@ def check_missing_keys(lang_keys: LANG_KEYS, report):
             missing_keys = other_keys - keys
 
             if missing_keys:
-                missing = '\n'.join(sorted([f"- {key}" for key in missing_keys]))
-                report.check_failed(file_name, f"Missing keys compared to {other_file_name}:\n{missing}")
+                missing = "\n".join(sorted([f"- {key}" for key in missing_keys]))
+                report.check_failed(
+                    file_name, f"Missing keys compared to {other_file_name}:\n{missing}"
+                )
 
 
 def check_empty_line_diffs(lang_content: LANG_CONTENT, report):
@@ -63,8 +63,5 @@ def check_empty_line_diffs(lang_content: LANG_CONTENT, report):
 
         for line, (ref_line, cur_line) in enumerate(zip(reference_lines, current_lines), start=1):
             if ref_line.strip() == "" and ref_line.strip() != cur_line.strip():
-                report.check_failed(
-                    file_name,
-                    f"Empty line {line} differs from {reference_file}."
-                )
+                report.check_failed(file_name, f"Empty line {line} differs from {reference_file}.")
                 break

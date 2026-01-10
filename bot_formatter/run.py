@@ -4,10 +4,10 @@ import argparse
 from pathlib import Path
 from typing import get_type_hints
 
-from libcst import codemod
 import yaml
+from libcst import codemod
 
-from bot_formatter.formatters import DPY, EZCORD, PYCORD, LANG, YML
+from bot_formatter.formatters import DPY, EZCORD, LANG, PYCORD, YML
 
 
 class Output:
@@ -91,7 +91,9 @@ class BotFormatter:
         if self.config.lang:
             self.lang_dir = Path(self.config.lang)
             if not self.lang_dir.is_dir():
-                raise ValueError(f"The language directory '{self.lang_dir}' is not a valid directory.")
+                raise ValueError(
+                    f"The language directory '{self.lang_dir}' is not a valid directory."
+                )
             self.check_lang_files()
 
         # Print report and exit with error code if needed
@@ -137,7 +139,6 @@ class BotFormatter:
                 raise ValueError(
                     "Formatter must accept either 'lang_keys' or 'lang_contents' parameter."
                 )
-
 
     def format_file(self, filename: str):
         """Runs all enabled formatters on a given file."""

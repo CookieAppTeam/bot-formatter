@@ -15,12 +15,7 @@ class ConvertContext(VisitorBasedCodemodCommand):
     IMPORT_EZCORD = m.Import(names=[m.ImportAlias(name=m.Name(value="ezcord"))])
 
     EZ_ANNOTATION_1 = m.Annotation(m.Attribute(value=m.Name("ezcord"), attr=m.Name("EzContext")))
-
-    EZ_ANNOTATION_2 = m.Annotation(
-        m.Name(
-            value="EzContext",
-        )
-    )
+    EZ_ANNOTATION_2 = m.Annotation(m.Name(value="EzContext"))
 
     def __init__(self, context: cst.codemod.CodemodContext):
         super().__init__(context)

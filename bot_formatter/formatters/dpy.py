@@ -8,15 +8,7 @@ from libcst.codemod import VisitorBasedCodemodCommand
 class ConvertSetup(VisitorBasedCodemodCommand):
     DESCRIPTION = "Converts setup methods to their asynchronous equivalent."
 
-    ADD_COG = m.Expr(
-        m.Call(
-            m.Attribute(
-                attr=m.Name(
-                    value="add_cog",
-                )
-            )
-        )
-    )
+    ADD_COG = m.Expr(m.Call(m.Attribute(attr=m.Name(value="add_cog"))))
 
     def __init__(self, context: cst.codemod.CodemodContext):
         super().__init__(context)
