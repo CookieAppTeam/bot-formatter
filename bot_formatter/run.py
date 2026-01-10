@@ -52,7 +52,7 @@ class Output:
             report += "\n" + "\n".join(self.failed_files)
 
         for file, errors in self.failed_checks.items():
-            report += f"\n\n\n------ CHECKS FAILED IN {file.upper()} ------"
+            report += f"\n\n------ CHECKS FAILED IN {file.upper()} ------"
             report += "\n\n" + "\n".join(errors)
 
         print(report)
@@ -80,6 +80,7 @@ class BotFormatter:
             parser.print_help()
             return
 
+        # Check language files
         if self.config.lang:
             self.lang_dir = Path(self.config.lang)
             if not self.lang_dir.is_dir():
@@ -89,6 +90,7 @@ class BotFormatter:
 
         self.check_lang_files()
 
+        # Format each file
         for file in self.config.files:
             self.format_file(file)
 
@@ -140,6 +142,7 @@ class BotFormatter:
 
         ext = filename.split(".")[-1]
 
+        # Run Python formatters
         for formatter in formatters:
             if ext != "py":
                 continue
@@ -158,7 +161,7 @@ class BotFormatter:
             elif isinstance(result, codemod.TransformFailure):
                 self.report.error(filename, result.error)
 
-        # Run language formatters
+        # Run YAML formatters
         if self.config.no_yaml or ext not in ["yaml", "yml"]:
             return
 

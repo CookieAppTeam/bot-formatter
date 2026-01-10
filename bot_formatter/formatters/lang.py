@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from bot_formatter.run import Output
 
 
+# A dictionary with a mapping of file names to their content
 LANG_CONTENT = dict[str, dict]
 
 
