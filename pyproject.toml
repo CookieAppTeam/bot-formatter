@@ -4,7 +4,7 @@ description = "A formatter for Discord bots."
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
-keywords = ["discord", "discord.py", "py-cord"]
+keywords = ["discord", "discord.py", "py-cord", "ezcord", "pre-commit"]
 authors = [
     { name = "tibue99" }
 ]

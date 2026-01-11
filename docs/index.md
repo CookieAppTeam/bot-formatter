@@ -1,5 +1,11 @@
-# Getting Started
-![](assets/logo.png)
+---
+title: Getting Started
+---
+#
+![Bot Formatter Logo](assets/logo.png)
+
+A formatter and language file validator for Discord bots.
+Made for [Ezcord](https://github.com/tibue99/ezcord) language files.
 
 ## Installing
 Python 3.10 or higher is required.
@@ -24,7 +30,7 @@ bot-formatter --help
 For a full overview, see the [config](config.md) page.
 
 ## Pre-Commit
-To use `bot-formatter` as a pre-commit hook, add the following to your `.pre-commit-config.yaml`:
+To use `bot-formatter` as a pre-commit hook, add the following lines to your `.pre-commit-config.yaml`:
 ```yaml
 - repo: https://github.com/CookieAppTeam/bot-formatter
   rev: 0.1.0
