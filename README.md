@@ -4,8 +4,11 @@
 [![](https://img.shields.io/readthedocs/bot-formatter?style=for-the-badge&color=blue&link=https%3A%2F%2Fbot-formatter.readthedocs.io%2F)](https://bot-formatter.readthedocs.io/)
 [![](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&style=for-the-badge)](https://github.com/pre-commit/pre-commit)
 
-A formatter and language file validator for Discord bots.
-Made for [Ezcord](https://github.com/tibue99/ezcord) language files.
+A formatter and language file validator for Python Discord bots.
+
+- ✏️ Includes formatters for `Pycord` and `discord.py`.
+- 📚 Format and compare YAML files.
+- 📝 Supports [Ezcord](https://github.com/tibue99/ezcord) language files.
 
 ## Installing
 Python 3.10 or higher is required.

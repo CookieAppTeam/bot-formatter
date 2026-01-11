@@ -1,4 +1,4 @@
-"""Formatters for Pycord ."""
+"""Formatters for Ezcord."""
 
 import libcst as cst
 import libcst.matchers as m

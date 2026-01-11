@@ -1,9 +1,9 @@
-# Configuration
+# ⚙️ Configuration
 There are several configuration options available. You can either pass them as
 command-line arguments or write them into your `.pre-commit-config.yaml` file.
 
 !!! tip
-    These options can also be viewed with the `--help` argument.
+    For usage examples, see the [Getting Started](index.md#usage) page.
 
 ## Positional Arguments
 | Argument | Description                                                                           |
@@ -20,10 +20,10 @@ command-line arguments or write them into your `.pre-commit-config.yaml` file.
 | `--dry-run`      | Check files without modifying them.                                             |
 
 ## Formatters
+For details on available formatters, see the [Formatters](formatters.md) page.
+
 | Argument                  | Description                                                         |
 |---------------------------|---------------------------------------------------------------------|
 | `--lib {dpy,pycord,none}` | Enable formatters for `Discord.py` or `Pycord`. Defaults to `none`. |
 | `--ezcord`                | Enable `Ezcord` formatters. Disabled by default.                    |
 | `--yaml` `--no-yaml`      | Enable or disable YAML formatters. Enabled by default.              |
-
-For usage examples, see the [Getting Started](index.md#usage) page.

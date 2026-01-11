@@ -1,11 +1,14 @@
 ---
-title: Getting Started
+title: 🏠 Getting Started
 ---
 #
 ![Bot Formatter Logo](assets/logo.png)
 
-A formatter and language file validator for Discord bots.
-Made for [Ezcord](https://github.com/tibue99/ezcord) language files.
+A formatter and language file validator for Python Discord bots.
+
+- ✏️ Includes formatters for `Pycord` and `discord.py`.
+- 📚 Format and compare YAML files.
+- 📝 Supports [Ezcord](https://github.com/tibue99/ezcord) language files.
 
 ## Installing
 Python 3.10 or higher is required.
