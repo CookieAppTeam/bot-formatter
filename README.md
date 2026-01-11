@@ -36,7 +36,7 @@ For a full overview, see the [documentation](https://bot-formatter.readthedocs.i
 To use `bot-formatter` as a pre-commit hook, add the following lines to your `.pre-commit-config.yaml`:
 ```yaml
 - repo: https://github.com/CookieAppTeam/bot-formatter
-  rev: 0.1.0
+  rev: 0.1.1
   hooks:
     - id: bot-formatter
 ```
