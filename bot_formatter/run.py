@@ -70,12 +70,19 @@ class BotFormatter:
             help="The files to format. When using pre-commit, this is provided automatically.",
         )
         parser.add_argument(
+            "--all", "-a", action="store_true", help="Format all files in the current directory."
+        )
+        parser.add_argument(
             "--lang-dir",
             type=Path,
             help="The language directory to check. YAML files in this directory will be compared.",
         )
 
-        parser.add_argument("--silent", action="store_true", help="Hide all log messages.")
+        logs = parser.add_mutually_exclusive_group()
+        logs.add_argument("--silent", "-s", action="store_true", help="Hide all log messages.")
+        logs.add_argument(
+            "--verbose", "-v", action="store_true", help="Show detailed log messages."
+        )
         parser.add_argument(
             "--dry-run", action="store_true", help="Scan files without modifying them."
         )
@@ -98,6 +105,19 @@ class BotFormatter:
         self.config = parser.parse_args(args)
         self.report = Output(self.config)
 
+        if not self.config.files and not self.config.all and not self.config.lang_dir:
+            parser.print_help()
+            return
+
+        if self.config.all:
+            self.config.files = [
+                str(p)
+                for p in Path(".").rglob("*")
+                if p.is_file()
+                and p.suffix in [".py", ".yaml", ".yml"]
+                and not any(part.startswith(".") for part in p.parts)
+            ]
+
         # Format each file
         for file in self.config.files:
             self.format_file(file)
@@ -114,9 +134,9 @@ class BotFormatter:
             raise SystemExit(1)
 
     def log(self, message: str):
-        """Prints a message to the console if the silent mode isn't enabled."""
+        """Prints a message to the console if verbose mode is enabled."""
 
-        if not self.config.silent:
+        if self.config.verbose:
             print(message)
 
     def check_lang_files(self):
@@ -125,6 +145,7 @@ class BotFormatter:
         lang_files = list(self.config.lang_dir.glob("*.yaml")) + list(
             self.config.lang_dir.glob("*.yml")
         )
+        self.log(f"Checking {len(lang_files)} language files in '{self.config.lang_dir}'")
 
         # All keys as a dictionary
         lang_keys = {}
@@ -156,6 +177,8 @@ class BotFormatter:
 
     def format_file(self, filename: str):
         """Runs all enabled formatters on a given file."""
+
+        self.log(f"Formatting {filename}")
         try:
             with open(filename, encoding="utf-8") as f:
                 code = f.read()

@@ -11,11 +11,13 @@ command-line arguments or write them into your `.pre-commit-config.yaml` file.
 | `files`  | One or more files to format. When using `pre-commit`, this is provided automatically. |
 
 ## Options
-| Argument     | Description                                                                       |
-|--------------|-----------------------------------------------------------------------------------|
-| `--lang-dir` | The language directory to check. YAML files in this directory will be compared.   |
-| `--silent`   | Disable all outputs.                                                              |
-| `--dry-run`  | Check files without modifying them.                                               |
+| Argument         | Description                                                                     |
+|------------------|---------------------------------------------------------------------------------|
+| `--all` `-a`     | Format all supported files in the current directory.                            |
+| `--lang-dir`     | The language directory to check. YAML files in this directory will be compared. |
+| `--silent` `-s`  | Disable all outputs.                                                            |
+| `--verbose` `-v` | Show detailed log messages.                                                     |
+| `--dry-run`      | Check files without modifying them.                                             |
 
 ## Formatters
 | Argument                  | Description                                                         |
