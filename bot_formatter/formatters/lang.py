@@ -66,20 +66,29 @@ def check_variables(lang_keys: LANG_KEYS, report):
 
     collected = {lang: _collect_vars(content) for lang, content in lang_keys.items()}
     files = list(collected.keys())
-    base = files[0]
 
+    if len(files) < 2:
+        return
+
+    base = files[0]
     base_keys = set(collected[base].keys())
 
     for file_name in files[1:]:
         other_keys = set(collected[file_name].keys())
 
         for key in base_keys & other_keys:
-            if collected[base][key] != collected[file_name][key]:
+            base_vars = collected[base][key]
+            other_vars = collected[file_name][key]
+
+            if base_vars != other_vars:
+                base_diff = base_vars - other_vars
+                other_diff = other_vars - base_vars
+
                 report.check_failed(
                     file_name,
                     f"Variable mismatch at '{key}'"
-                    f"\n- {base}: {collected[base][key]}"
-                    f"\n- {file_name}: {collected[file_name][key]}",
+                    f"\n- {base}: {base_diff}"
+                    f"\n- {file_name}: {other_diff}",
                 )
 
 
