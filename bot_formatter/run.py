@@ -161,6 +161,10 @@ class BotFormatter:
                 code = f.read()
                 lang_contents[file_path.name] = code
 
+        if len(lang_files) < 2:
+            self.log("Not enough language files to compare.")
+            return
+
         for formatter in LANG:
             params = get_type_hints(formatter)
 

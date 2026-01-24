@@ -77,9 +77,8 @@ def check_missing_keys(lang_keys: LANG_KEYS, report):
 def check_key_order(lang_keys: LANG_KEYS, report):
     """Checks that all language files use the same key order and reports keys out of order."""
 
-    # Take the first file as reference
-    reference_file, reference_content = next(iter(lang_keys.items()))
-    reference_order = _collect_keys_ordered(reference_content)
+    reference_file = list(lang_keys)[0]
+    reference_order = _collect_keys_ordered(lang_keys[reference_file])
 
     for file_name, content in lang_keys.items():
         if file_name == reference_file:
@@ -100,9 +99,6 @@ def check_variables(lang_keys: LANG_KEYS, report):
 
     collected = {lang: _collect_vars(content) for lang, content in lang_keys.items()}
     files = list(collected.keys())
-
-    if len(files) < 2:
-        return
 
     base = files[0]
     base_keys = set(collected[base].keys())
@@ -129,16 +125,8 @@ def check_variables(lang_keys: LANG_KEYS, report):
 def check_empty_line_diffs(lang_content: LANG_CONTENT, report):
     """Checks if all YAML keys are in the same line across different language files."""
 
-    reference_file = None
-    reference_lines = []
-
-    for file_name, content in lang_content.items():
-        reference_file = file_name
-        reference_lines = content.splitlines()
-        break
-
-    if reference_file is None:
-        return
+    reference_file = list(lang_content)[0]
+    reference_lines = lang_content[reference_file].splitlines()
 
     # Compare all files to reference file
     for file_name, content in lang_content.items():
