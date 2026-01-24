@@ -25,6 +25,19 @@ def _collect_keys(dict_content: dict, parent_key: str | None = None) -> set[str]
     return keys
 
 
+def _collect_keys_ordered(dict_content: dict, parent_key: str | None = None) -> list[str]:
+    """Recursively collects all keys in a nested dictionary in order."""
+
+    keys = []
+    for key, value in dict_content.items():
+        full_key = f"{parent_key}.{key}" if parent_key else key
+        keys.append(full_key)
+        if isinstance(value, dict):
+            keys.extend(_collect_keys_ordered(value, full_key))
+
+    return keys
+
+
 def _collect_vars(dict_content: dict, parent_key: str | None = None) -> dict[str, set[str]]:
     """Recursively collects all variables per key in a nested dictionary."""
 
@@ -59,6 +72,27 @@ def check_missing_keys(lang_keys: LANG_KEYS, report):
                 report.check_failed(
                     file_name, f"Missing keys compared to {other_file_name}:\n{missing}"
                 )
+
+
+def check_key_order(lang_keys: LANG_KEYS, report):
+    """Checks that all language files use the same key order and reports keys out of order."""
+
+    # Take the first file as reference
+    reference_file, reference_content = next(iter(lang_keys.items()))
+    reference_order = _collect_keys_ordered(reference_content)
+
+    for file_name, content in lang_keys.items():
+        if file_name == reference_file:
+            continue
+
+        current_order = _collect_keys_ordered(content)
+        wrong_keys = [k for k, ref_k in zip(current_order, reference_order) if k != ref_k]
+
+        if wrong_keys:
+            report.check_failed(
+                file_name,
+                f"Keys in wrong order:\n" + "\n".join(f"- {k}" for k in wrong_keys),
+            )
 
 
 def check_variables(lang_keys: LANG_KEYS, report):
