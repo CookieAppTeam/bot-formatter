@@ -25,6 +25,8 @@ the `--lang-dir` option.
 | Type | Name                     | Description                                                                       |
 |------|--------------------------|-----------------------------------------------------------------------------------|
 | 🔍   | `check_missing_keys`     | Reports missing keys between language files.                                      |
+| 🔍   | `check_key_order`        | Reports different key orders between language files.                              |
+| 🔍   | `check_variables`        | Reports inconsistent {variables} between language file values.                    |
 | 🔍   | `check_empty_line_diffs` | Checks that sections are consistent between language files comparing empty lines. |
 
 ## Ezcord
