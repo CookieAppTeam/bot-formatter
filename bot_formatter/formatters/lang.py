@@ -1,10 +1,15 @@
 """Formatters for YAML language files that compare content and keys across multiple files."""
 
+import re
+
 # A dictionary with a mapping of file names to their keys
 LANG_KEYS = dict[str, dict]
 
 # A dictionary with a mapping of file names to their content
 LANG_CONTENT = dict[str, str]
+
+
+VAR_REGEX = re.compile(r"\{([^}]+)}")
 
 
 def _collect_keys(dict_content: dict, parent_key: str | None = None) -> set[str]:
@@ -18,6 +23,22 @@ def _collect_keys(dict_content: dict, parent_key: str | None = None) -> set[str]
             keys.update(_collect_keys(value, full_key))
 
     return keys
+
+
+def _collect_vars(dict_content: dict, parent_key: str | None = None) -> dict[str, set[str]]:
+    """Recursively collects all variables per key in a nested dictionary."""
+
+    result = {}
+    for key, value in dict_content.items():
+        full_key = f"{parent_key}.{key}" if parent_key else key
+
+        if isinstance(value, dict):
+            result.update(_collect_vars(value, full_key))
+        elif isinstance(value, str):
+            vars_found = set(VAR_REGEX.findall(value))
+            result[full_key] = vars_found
+
+    return result
 
 
 def check_missing_keys(lang_keys: LANG_KEYS, report):
@@ -37,6 +58,28 @@ def check_missing_keys(lang_keys: LANG_KEYS, report):
                 missing = "\n".join(sorted([f"- {key}" for key in missing_keys]))
                 report.check_failed(
                     file_name, f"Missing keys compared to {other_file_name}:\n{missing}"
+                )
+
+
+def check_variables(lang_keys: LANG_KEYS, report):
+    """Prevents multiple keys with the same prefix in a language file block."""
+
+    collected = {lang: _collect_vars(content) for lang, content in lang_keys.items()}
+    files = list(collected.keys())
+    base = files[0]
+
+    base_keys = set(collected[base].keys())
+
+    for file_name in files[1:]:
+        other_keys = set(collected[file_name].keys())
+
+        for key in base_keys & other_keys:
+            if collected[base][key] != collected[file_name][key]:
+                report.check_failed(
+                    file_name,
+                    f"Variable mismatch at '{key}'"
+                    f"\n- {base}: {collected[base][key]}"
+                    f"\n- {file_name}: {collected[file_name][key]}",
                 )
 
 
