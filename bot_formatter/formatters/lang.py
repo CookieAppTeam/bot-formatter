@@ -90,7 +90,7 @@ def check_key_order(lang_keys: LANG_KEYS, report):
         if wrong_keys:
             report.check_failed(
                 file_name,
-                f"Keys in wrong order:\n" + "\n".join(f"- {k}" for k in wrong_keys),
+                f"Keys in wrong order:\n" + "\n".join(f"- {k}" for k in wrong_keys[:5]),
             )
 
 
