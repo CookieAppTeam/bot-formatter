@@ -192,11 +192,9 @@ def check_variables(lang_keys: LANG_KEYS, lang_content: LANG_CONTENT, report):
                 report.check_failed(
                     file_name,
                     f"Variable mismatch at '{key}'"
-                    f"\n- {base_location}: {base_diff}"
-                    f"\n- {file_location}: {other_diff}",
+                    f"\n- {base_location} {base_diff}"
+                    f"\n- {file_location} {other_diff}",
                 )
-
-                report.check_failed(file_name, file_location)
 
 
 def check_empty_line_diffs(lang_content: LANG_CONTENT, report):
