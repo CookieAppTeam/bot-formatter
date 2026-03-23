@@ -1,6 +1,8 @@
 """Formatters for YAML language files that compare content and keys across multiple files."""
 
+import os
 import re
+import sys
 from pathlib import Path
 
 # A dictionary with a mapping of file names to their keys
@@ -12,6 +14,12 @@ LANG_CONTENT = dict[str, str]
 
 VAR_REGEX = re.compile(r"\{([^}]+)}")
 YAML_KEY_REGEX = re.compile(r"^([^:#][^:]*?)\s*:")
+
+
+def _format_blue(text: str) -> str:
+    """Formats text in blue when terminal coloring is supported."""
+
+    return f"\033[34m{text}\033[0m"
 
 
 def _build_key_line_map(content: str) -> dict[str, int]:
@@ -59,13 +67,14 @@ def _format_key_location(key_line_map: dict[str, int], file_name: str, key: str)
     """Formats a clickable file location for a dotted key if a line exists."""
 
     line = key_line_map.get(key)
-    return f"{Path(file_name).absolute()}:{line}" if line else file_name
+    location = f"{Path(file_name).absolute()}:{line}" if line else file_name
+    return _format_blue(location)
 
 
 def _format_line_location(file_name: str, line: int) -> str:
     """Formats a clickable file location for a concrete line number."""
 
-    return f"{Path(file_name).absolute()}:{line}"
+    return _format_blue(f"{Path(file_name).absolute()}:{line}")
 
 
 def _collect_keys(dict_content: dict, parent_key: str | None = None) -> set[str]:
