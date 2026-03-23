@@ -59,7 +59,7 @@ def _format_key_location(key_line_map: dict[str, int], file_name: str, key: str)
     """Formats a clickable file location for a dotted key if a line exists."""
 
     line = key_line_map.get(key)
-    return f"{Path(file_name)}:{line}" if line else file_name
+    return f"{Path(file_name).absolute()}:{line}" if line else file_name
 
 
 def _collect_keys(dict_content: dict, parent_key: str | None = None) -> set[str]:
