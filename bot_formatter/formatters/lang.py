@@ -62,6 +62,12 @@ def _format_key_location(key_line_map: dict[str, int], file_name: str, key: str)
     return f"{Path(file_name).absolute()}:{line}" if line else file_name
 
 
+def _format_line_location(file_name: str, line: int) -> str:
+    """Formats a clickable file location for a concrete line number."""
+
+    return f"{Path(file_name).absolute()}:{line}"
+
+
 def _collect_keys(dict_content: dict, parent_key: str | None = None) -> set[str]:
     """Recursively collects all keys in a nested dictionary."""
 
@@ -208,5 +214,10 @@ def check_empty_line_diffs(lang_content: LANG_CONTENT, report):
 
         for line, (ref_line, cur_line) in enumerate(zip(reference_lines, current_lines), start=1):
             if ref_line.strip() == "" and ref_line.strip() != cur_line.strip():
-                report.check_failed(file_name, f"Empty line {line} differs from {reference_file}.")
+                current_location = _format_line_location(file_name, line)
+                reference_location = _format_line_location(reference_file, line)
+                report.check_failed(
+                    file_name,
+                    f"Empty line {line} is not consistent:\n- {current_location}\n- {reference_location}",
+                )
                 break
