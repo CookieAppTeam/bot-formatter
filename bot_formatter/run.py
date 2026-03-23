@@ -146,20 +146,19 @@ class BotFormatter:
             self.config.lang_dir.glob("*.yml")
         )
         self.log(f"Checking {len(lang_files)} language files in '{self.config.lang_dir}'")
-
         # All keys as a dictionary
         lang_keys = {}
         for file_path in lang_files:
             with open(file_path, encoding="utf-8") as f:
                 content = yaml.safe_load(f)
-                lang_keys[file_path.name] = content
+                lang_keys[str(file_path)] = content
 
         # All contents as a string
         lang_contents = {}
         for file_path in lang_files:
             with open(file_path, encoding="utf-8") as f:
                 code = f.read()
-                lang_contents[file_path.name] = code
+                lang_contents[str(file_path)] = code
 
         if len(lang_files) < 2:
             self.log("Not enough language files to compare.")
