@@ -11,12 +11,11 @@ from bot_formatter.formatters import DPY, EZCORD, LANG, PYCORD, YML
 
 
 class Output:
-    modified_files: list[str] = []
-    failed_files: list[str] = []
-    failed_checks: dict[str, list[str]] = {}
-
     def __init__(self, config: argparse.Namespace):
         self.config = config
+        self.modified_files: list[str] = []
+        self.failed_files: list[str] = []
+        self.failed_checks: dict[str, list[str]] = {}
 
     def success(self, file: str):
         self.modified_files.append(file)
