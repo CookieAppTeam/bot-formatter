@@ -1,8 +1,6 @@
 """Formatters for YAML language files that compare content and keys across multiple files."""
 
-import os
 import re
-import sys
 from pathlib import Path
 
 # A dictionary with a mapping of file names to their keys
@@ -47,7 +45,7 @@ def _build_key_line_map(content: str) -> dict[str, int]:
         while parent_stack and indent <= parent_stack[-1][0]:
             parent_stack.pop()
 
-        full_key = ".".join([*map(lambda item: item[1], parent_stack), key])
+        full_key = ".".join([*(item[1] for item in parent_stack), key])
         key_lines[full_key] = line_number
 
         value_part = indented.split(":", 1)[1].strip()
@@ -153,7 +151,7 @@ def check_key_order(lang_keys: LANG_KEYS, lang_content: LANG_CONTENT, report):
 
     line_maps = _build_line_maps(lang_content)
 
-    reference_file = list(lang_keys)[0]
+    reference_file = next(iter(lang_keys))
     reference_order = _collect_keys_ordered(lang_keys[reference_file])
 
     for file_name, content in lang_keys.items():
@@ -209,7 +207,7 @@ def check_variables(lang_keys: LANG_KEYS, lang_content: LANG_CONTENT, report):
 def check_empty_line_diffs(lang_content: LANG_CONTENT, report):
     """Checks if all YAML keys are in the same line across different language files."""
 
-    reference_file = list(lang_content)[0]
+    reference_file = next(iter(lang_content))
     reference_lines = lang_content[reference_file].splitlines()
 
     # Compare all files to reference file

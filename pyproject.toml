@@ -32,6 +32,17 @@ GitHub = "https://github.com/CookieAppTeam/bot-formatter"
 [project.scripts]
 bot-formatter = "bot_formatter:run"
 
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+extend-select = ["I"]
+extend-ignore = ["BLE001", "SIM102"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["bot_formatter"]
+
 [build-system]
 requires = ["setuptools>=62.6", "wheel"]
 build-backend = "setuptools.build_meta"
