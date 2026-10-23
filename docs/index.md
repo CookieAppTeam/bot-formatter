@@ -11,7 +11,7 @@ A formatter and language file validator for Python Discord bots.
 - 📝 Supports [Ezcord](https://github.com/tibue99/ezcord) language files.
 
 ## Installing
-Python 3.10 or higher is required.
+Python 3.11 or higher is required.
 ```
 pip install bot-formatter
 ```

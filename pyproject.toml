@@ -2,7 +2,7 @@
 name = "bot-formatter"
 description = "A formatter for Discord bots."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = {text = "MIT"}
 keywords = ["discord", "discord.py", "py-cord", "ezcord", "pre-commit"]
 authors = [
@@ -14,11 +14,11 @@ classifiers = [
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
     "Topic :: Software Development :: Quality Assurance",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
 ]
 dynamic = ["version", "dependencies"]
 
@@ -34,7 +34,7 @@ bot-formatter = "bot_formatter:run"
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py315"
 
 [tool.ruff.lint]
 extend-select = ["I"]
